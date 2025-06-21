@@ -1,0 +1,144 @@
+// Переменные для удобства
+$animation-duration: 0.3s;
+$green-color: #4caf50;
+$green-hover-color: #45a049;
+$green-focus-border-color: #3b873e; // Цвет для outline кнопки (немного темнее $green-color)
+$overlay-bg: rgba(0, 0, 0, 0.6);
+$popup-bg: #fff;
+$text-color: #333;
+$text-color-secondary: #666; // Более светлый цвет текста (вместо lighten)
+$border-radius: 8px;
+$box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+$border-light-color: #eee; // Цвет для разделителя в header
+
+.popupOverlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: $overlay-bg;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+
+	padding-inline: 12px;
+
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity $animation-duration ease-in-out,
+		visibility 0s $animation-duration;
+
+	&.open {
+		opacity: 1;
+		visibility: visible;
+		transition-delay: 0s;
+	}
+
+	&.closing {
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity $animation-duration ease-in-out,
+			visibility 0s $animation-duration;
+	}
+}
+
+.popupContent {
+	background: rgba(17, 24, 39, 0.95);
+	backdrop-filter: blur(20px);
+	border-radius: 24px;
+	padding: 32px 24px;
+
+	width: 100%;
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1),
+		0 8px 20px rgba(0, 0, 0, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+
+	text-align: left;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+
+	transform: scale(0.9) translateY(20px);
+	opacity: 0;
+	transition: transform $animation-duration ease-out,
+		opacity $animation-duration ease-out;
+
+	.popupOverlay.open & {
+		transform: scale(1) translateY(0);
+		opacity: 1;
+	}
+
+	.popupOverlay.closing & {
+		transform: scale(0.9) translateY(20px);
+		opacity: 0;
+	}
+}
+
+.popupHeader {
+	font-size: 28px;
+	font-weight: 700;
+	background: linear-gradient(135deg, #667eea, #764ba2);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	margin: 0 0 20px 0;
+	letter-spacing: -0.5px;
+
+	line-height: 1.2;
+
+	text-align: center;
+}
+
+.popupBody {
+	color: #6b7280;
+	font-size: 20px;
+	text-align: center;
+
+	margin-bottom: 30px;
+}
+
+.popupFooter {
+	display: flex;
+	justify-content: center;
+}
+
+.popupButton {
+	background-color: $green-color;
+	color: white;
+	border: none;
+	padding: 10px 25px;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 20px;
+	font-weight: bold;
+	transition: background-color 0.2s ease-in-out;
+
+	&:hover {
+		background-color: $green-hover-color;
+	}
+
+	&:focus {
+		outline: 2px solid $green-focus-border-color; // Используем новую переменную
+		outline-offset: 2px;
+	}
+}
+
+// Медиа-запрос для маленьких экранов
+@media (max-width: 425px) {
+	.popupContent {
+		width: 80%;
+		padding: 20px;
+	}
+	.popupBody {
+		font-size: 16px;
+	}
+	.popupHeader {
+		font-size: 24px;
+	}
+	.popupButton {
+		// padding: 8px 20px;
+		// font-size: 0.9em;
+	}
+}
