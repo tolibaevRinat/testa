@@ -1,15 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import {
 	Route,
 	Routes,
 	useNavigate,
 } from 'react-router-dom'
 
-import Header from './components/Header'
-import Footer from './components/Footer'
-import HomePage from './pages/HomePage'
-import AuthPage from './pages/AuthPage'
-import Popup from './components/Popup'
+import Loader from './components/Loader'
+
+const Header = lazy(() => import('./components/Header'))
+const Footer = lazy(() => import('./components/Footer'))
+const HomePage = lazy(() => import('./pages/HomePage'))
+const AuthPage = lazy(() => import('./pages/AuthPage'))
+const Popup = lazy(() => import('./components/Popup'))
 
 function App() {
 	const navigate = useNavigate()
@@ -168,46 +170,48 @@ function App() {
 
 	return (
 		<>
-			<Popup
-				title={popupTitle}
-				text={popupText}
-				isOpen={isPopupOpen}
-				onClose={handleClosePopup}
-			/>
-			<Header />
-			<main className='page'>
-				<Routes>
-					<Route
-						path='/'
-						element={
-							<HomePage
-								user={user}
-								handleLogout={handleLogout}
-							/>
-						}
-					/>
-					<Route
-						path='/auth'
-						element={
-							<AuthPage
-								user={user}
-								isLogin={isLogin}
-								loginData={loginData}
-								showPassword={showPassword}
-								setShowPassword={setShowPassword}
-								loading={loading}
-								handleLogin={handleLogin}
-								handleRegister={handleRegister}
-								setLoginData={setLoginData}
-								setIsLogin={setIsLogin}
-								registerData={registerData}
-								setRegisterData={setRegisterData}
-							/>
-						}
-					/>
-				</Routes>
-			</main>
-			<Footer />
+			<Suspense fallback={<Loader />}>
+				<Popup
+					title={popupTitle}
+					text={popupText}
+					isOpen={isPopupOpen}
+					onClose={handleClosePopup}
+				/>
+				<Header />
+				<main className='page'>
+					<Routes>
+						<Route
+							path='/'
+							element={
+								<HomePage
+									user={user}
+									handleLogout={handleLogout}
+								/>
+							}
+						/>
+						<Route
+							path='/auth'
+							element={
+								<AuthPage
+									user={user}
+									isLogin={isLogin}
+									loginData={loginData}
+									showPassword={showPassword}
+									setShowPassword={setShowPassword}
+									loading={loading}
+									handleLogin={handleLogin}
+									handleRegister={handleRegister}
+									setLoginData={setLoginData}
+									setIsLogin={setIsLogin}
+									registerData={registerData}
+									setRegisterData={setRegisterData}
+								/>
+							}
+						/>
+					</Routes>
+				</main>
+				<Footer />
+			</Suspense>
 		</>
 	)
 }
